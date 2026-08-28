@@ -67,24 +67,24 @@ NOTEBOOK_RESULTS = pd.DataFrame(
             "K-Nearest Neighbors"
         ],
         "Accuracy": [
+            91.4773,
             89.2045,
-            81.2500,
-            78.9773
+            79.5455
         ],
         "Macro Precision": [
-            90.4424,
-            74.3214,
-            75.6639
+            92.0768,
+            83.0840,
+            82.3879
         ],
         "Macro Recall": [
-            83.3784,
-            72.2707,
-            70.7920
+            86.2356,
+            85.5664,
+            74.2206
         ],
         "Macro F1-Score": [
-            85.5800,
-            72.7197,
-            72.3218
+            87.8960,
+            84.0934,
+            76.8381
         ]
     }
 )
@@ -343,7 +343,7 @@ if page == "Project Overview":
         "Decision Tree, Logistic Regression and K-Nearest Neighbors."
     )
 
-    c1, c2, c3, c4 = st.columns(4)
+    c1, c2, c3, c4, c5 = st.columns(5)
 
     c1.metric(
         "Original Records",
@@ -356,11 +356,16 @@ if page == "Project Overview":
     )
 
     c3.metric(
-        "Input Features",
+        "Original Features",
         "16"
     )
 
     c4.metric(
+        "Encoded Features",
+        "23"
+    )
+
+    c5.metric(
         "Target Classes",
         "7"
     )
@@ -381,19 +386,19 @@ if page == "Project Overview":
     models_table = pd.DataFrame(
         {
             "Model": [
-                "Logistic Regression",
                 "Decision Tree",
+                "Logistic Regression",
                 "K-Nearest Neighbors"
             ],
-            "Role": [
-                "Baseline model",
-                "Tuned model",
-                "Tuned model"
-            ],
-            "Configuration": [
-                "Fixed parameters",
+            "Tuning": [
+                "GridSearchCV",
                 "GridSearchCV",
                 "GridSearchCV"
+            ],
+            "Selection Metric": [
+                "Accuracy",
+                "Macro F1-Score",
+                "Macro F1-Score"
             ]
         }
     )
@@ -925,30 +930,32 @@ elif page == "Model Evaluation":
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.markdown("#### Logistic Regression")
-        st.caption("Baseline model")
-        st.json(
-            {
-                "C": 1.0,
-                "solver": "lbfgs",
-                "penalty": "l2",
-                "max_iter": 3000
-            }
-        )
-        st.write("Fixed configuration")
-
-    with col2:
         st.markdown("#### Decision Tree")
         st.caption("GridSearchCV tuned")
         st.json(
             {
+                "class_weight": "balanced",
                 "criterion": "entropy",
                 "max_depth": 10,
-                "min_samples_leaf": 5,
+                "min_samples_leaf": 1,
                 "min_samples_split": 5
             }
         )
-        st.write("CV Macro F1: **84.21%**")
+        st.write("GridSearch scoring: **Accuracy**")
+        st.write("Best CV Accuracy: **88.31%**")
+
+    with col2:
+        st.markdown("#### Logistic Regression")
+        st.caption("GridSearchCV tuned")
+        st.json(
+            {
+                "C": 20,
+                "class_weight": "balanced",
+                "solver": "newton-cg"
+            }
+        )
+        st.write("GridSearch scoring: **Macro F1-Score**")
+        st.write("Best CV Macro F1: **81.71%**")
 
     with col3:
         st.markdown("#### K-Nearest Neighbors")
@@ -956,13 +963,12 @@ elif page == "Model Evaluation":
         st.json(
             {
                 "metric": "manhattan",
-                "n_neighbors": 5,
-                "p": 1,
+                "n_neighbors": 4,
                 "weights": "distance"
             }
         )
-        st.write("GridSearch scoring: **Accuracy**")
-        st.write("Best CV Accuracy: **72.05%**")
+        st.write("GridSearch scoring: **Macro F1-Score**")
+        st.write("Best CV Macro F1: **67.96%**")
 
     st.divider()
 
@@ -1052,14 +1058,14 @@ elif page == "Model Evaluation":
 
     b1, b2, b3, b4 = st.columns(4)
 
-    b1.metric("Accuracy", "89.20%")
-    b2.metric("Macro Precision", "90.44%")
-    b3.metric("Macro Recall", "83.38%")
-    b4.metric("Macro F1-Score", "85.58%")
+    b1.metric("Accuracy", "91.48%")
+    b2.metric("Macro Precision", "92.08%")
+    b3.metric("Macro Recall", "86.24%")
+    b4.metric("Macro F1-Score", "87.90%")
 
     st.success(
-        "🏆 Decision Tree achieved the highest Macro F1-Score and "
-        "the highest Accuracy among the three evaluated models."
+        "🏆 Decision Tree achieved the highest Accuracy, Macro Precision, "
+        "and Macro F1-Score among the three evaluated models."
     )
 
     st.subheader("Confusion Matrix — Best Model")
@@ -1120,7 +1126,7 @@ elif page == "Model Evaluation":
             )
 
             ax_cm.set_title(
-                f"Confusion Matrix - {type(model).__name__}"
+                "Confusion Matrix - Decision Tree"
             )
 
             fig_cm.tight_layout()
@@ -1161,12 +1167,14 @@ elif page == "Model Evaluation":
 
     st.write(
         """
-        - **Decision Tree** provides the strongest overall performance.
-        - **Macro Recall is lower than Accuracy**, indicating that some
-          classes are harder to detect consistently.
-        - The confusion matrix is important because it shows which
-          obesity classes are being confused, rather than only reporting
-          one overall score.
+        - **Decision Tree** provides the strongest overall performance,
+          with 91.48% Accuracy and 87.90% Macro F1-Score.
+        - **Logistic Regression** is the second-best model overall and
+          achieves 89.20% Accuracy.
+        - **K-Nearest Neighbors** has the lowest overall performance of
+          the three evaluated models.
+        - The confusion matrix shows which obesity classes are predicted
+          correctly and which classes are confused with each other.
         """
     )
 
@@ -1215,7 +1223,7 @@ feature_columns.pkl"""
 
         1. Enter your personal information.
         2. Choose your eating and lifestyle habits.
-        3. The prediction appears automatically — no button is needed.
+        3. The prediction appears automatically.
         """
     )
 
@@ -1223,7 +1231,7 @@ feature_columns.pkl"""
     # INPUT SECTION
     # ========================================================
 
-    st.subheader("Step 1 — Enter Your Information")
+    st.subheader("Enter Your Information")
 
     input_left, input_right = st.columns(2)
 
@@ -1483,7 +1491,7 @@ feature_columns.pkl"""
     # ========================================================
 
     st.divider()
-    st.subheader("Step 2 — Your Result")
+    st.subheader("Your Result")
 
     result_left, result_right = st.columns(
         [1.2, 1]
