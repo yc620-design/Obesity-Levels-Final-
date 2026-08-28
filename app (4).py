@@ -68,23 +68,23 @@ NOTEBOOK_RESULTS = pd.DataFrame(
         ],
         "Accuracy": [
             91.48,
-            89.20,
-            79.55
+            81.25,
+            78.98
         ],
         "Macro Precision": [
             92.08,
-            83.08,
-            82.39
+            74.32,
+            75.66
         ],
         "Macro Recall": [
             86.24,
-            85.57,
-            74.22
+            72.27,
+            70.79
         ],
         "Macro F1-Score": [
             87.90,
-            84.09,
-            76.84
+            72.72,
+            72.32
         ]
     }
 )
@@ -339,8 +339,9 @@ if page == "Project Overview":
     )
 
     st.info(
-        "The prototype follows the final notebook pipeline and compares "
-        "Decision Tree, Logistic Regression and K-Nearest Neighbors."
+        "The prototype follows the final notebook pipeline: Logistic Regression "
+        "is used as the baseline model, while Decision Tree and KNN are "
+        "tuned using GridSearchCV."
     )
 
     c1, c2, c3, c4 = st.columns(4)
@@ -387,12 +388,12 @@ if page == "Project Overview":
             ],
             "Role": [
                 "Tuned model",
-                "Tuned model",
+                "Baseline model",
                 "Tuned model"
             ],
             "Configuration": [
                 "GridSearchCV",
-                "GridSearchCV",
+                "Fixed parameters / No GridSearchCV",
                 "GridSearchCV"
             ]
         }
@@ -913,10 +914,10 @@ elif page == "Model Evaluation":
 
     st.write(
         """
-        All models are compared using Accuracy, Macro Precision,
-        Macro Recall and Macro F1-Score. Macro averaging gives each
-        obesity class equal importance when calculating Precision,
-        Recall and F1.
+        Logistic Regression is used as the baseline model with fixed
+        parameters. Decision Tree and K-Nearest Neighbors are tuned using
+        GridSearchCV. All three models are compared using Accuracy,
+        Macro Precision, Macro Recall and Macro F1-Score.
         """
     )
 
@@ -926,7 +927,7 @@ elif page == "Model Evaluation":
 
     with col1:
         st.markdown("#### Decision Tree")
-        st.caption("GridSearchCV tuned")
+        st.caption("Tuned Model — GridSearchCV")
         st.json(
             {
                 "class_weight": "balanced",
@@ -937,33 +938,53 @@ elif page == "Model Evaluation":
             }
         )
         st.write("GridSearch scoring: **Accuracy**")
+        st.write("Cross-validation: **5 folds**")
         st.write("Best CV Accuracy: **88.31%**")
 
     with col2:
         st.markdown("#### Logistic Regression")
-        st.caption("GridSearchCV tuned")
+        st.caption("Baseline Model")
         st.json(
             {
-                "C": 20,
-                "class_weight": "balanced",
-                "solver": "newton-cg"
+                "C": 1.0,
+                "solver": "lbfgs",
+                "penalty": "l2",
+                "max_iter": 3000,
+                "random_state": 42
             }
         )
-        st.write("GridSearch scoring: **Macro F1-Score**")
-        st.write("Best CV Macro F1: **81.71%**")
+        st.write("Tuning: **Fixed parameters / No GridSearchCV**")
+        st.write("Role: **Baseline comparison model**")
 
     with col3:
         st.markdown("#### K-Nearest Neighbors")
-        st.caption("GridSearchCV tuned")
+        st.caption("Tuned Model — GridSearchCV")
         st.json(
             {
                 "metric": "manhattan",
-                "n_neighbors": 4,
+                "n_neighbors": 5,
+                "p": 1,
                 "weights": "distance"
             }
         )
-        st.write("GridSearch scoring: **Macro F1-Score**")
-        st.write("Best CV Macro F1: **67.96%**")
+        st.write("GridSearch scoring: **Accuracy**")
+        st.write(
+            "Cross-validation: **StratifiedKFold "
+            "(5 folds, shuffle=True, random_state=42)**"
+        )
+        st.write("Best CV Accuracy: **72.05%**")
+
+    with st.expander("KNN GridSearchCV Search Space"):
+        st.code(
+            """knn_param_grid = {
+    'n_neighbors': [3, 5, 7, 9, 11, 15, 21, 25],
+    'weights': ['uniform', 'distance'],
+    'metric': ['euclidean', 'manhattan', 'minkowski'],
+    'p': [1, 2]
+}""",
+            language="python"
+        )
+
 
 
     st.divider()
@@ -1163,13 +1184,17 @@ elif page == "Model Evaluation":
 
     st.write(
         """
-        - **Decision Tree** achieved the best overall performance.
-        - Decision Tree achieved **91.48% Accuracy**, **92.08% Macro Precision**,
-          **86.24% Macro Recall** and **87.90% Macro F1-Score**.
-        - Logistic Regression achieved **89.20% Accuracy** and **84.09% Macro F1-Score**.
-        - K-Nearest Neighbors achieved **79.55% Accuracy** and **76.84% Macro F1-Score**.
-        - The confusion matrix shows the correctly predicted classes on the diagonal
-          and the incorrectly classified obesity levels outside the diagonal.
+        - **Decision Tree** achieved the strongest overall performance with
+          **91.48% Accuracy** and **87.90% Macro F1-Score**.
+        - **Logistic Regression** is the baseline model and achieved
+          **81.25% Accuracy** and **72.72% Macro F1-Score**.
+        - **K-Nearest Neighbors** was tuned using GridSearchCV with
+          StratifiedKFold and achieved **78.98% Accuracy** and
+          **72.32% Macro F1-Score**.
+        - Based on Macro F1-Score, the overall ranking is:
+          **Decision Tree > Logistic Regression > K-Nearest Neighbors**.
+        - The confusion matrix below shows the performance of the selected
+          best model, Decision Tree.
         """
     )
 
@@ -1218,7 +1243,7 @@ feature_columns.pkl"""
 
         1. Enter your personal information.
         2. Choose your eating and lifestyle habits.
-        3. The prediction appears automatically.
+        3. The prediction appears automatically — no button is needed.
         """
     )
 
@@ -1226,7 +1251,7 @@ feature_columns.pkl"""
     # INPUT SECTION
     # ========================================================
 
-    st.subheader("Enter Your Information")
+    st.subheader("Step 1 — Enter Your Information")
 
     input_left, input_right = st.columns(2)
 
@@ -1486,7 +1511,7 @@ feature_columns.pkl"""
     # ========================================================
 
     st.divider()
-    st.subheader("Your Result")
+    st.subheader("Step 2 — Your Result")
 
     result_left, result_right = st.columns(
         [1.2, 1]
