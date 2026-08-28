@@ -338,12 +338,6 @@ if page == "Project Overview":
         """
     )
 
-    st.info(
-        "The prototype follows the final notebook pipeline: Logistic Regression "
-        "is used as the baseline model, while Decision Tree and KNN are "
-        "tuned using GridSearchCV."
-    )
-
     c1, c2, c3, c4 = st.columns(4)
 
     c1.metric(
@@ -1243,7 +1237,7 @@ feature_columns.pkl"""
 
         1. Enter your personal information.
         2. Choose your eating and lifestyle habits.
-        3. The prediction appears automatically — no button is needed.
+        3. The prediction appears automatically.
         """
     )
 
@@ -1251,7 +1245,7 @@ feature_columns.pkl"""
     # INPUT SECTION
     # ========================================================
 
-    st.subheader("Step 1 — Enter Your Information")
+    st.subheader("Enter Your Information")
 
     input_left, input_right = st.columns(2)
 
@@ -1511,7 +1505,7 @@ feature_columns.pkl"""
     # ========================================================
 
     st.divider()
-    st.subheader("Step 2 — Your Result")
+    st.subheader("Your Result")
 
     result_left, result_right = st.columns(
         [1.2, 1]
