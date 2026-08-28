@@ -967,20 +967,7 @@ elif page == "Model Evaluation":
             "(5 folds, shuffle=True, random_state=42)**"
         )
         st.write("Best CV Accuracy: **72.05%**")
-
-    with st.expander("KNN GridSearchCV Search Space"):
-        st.code(
-            """knn_param_grid = {
-    'n_neighbors': [3, 5, 7, 9, 11, 15, 21, 25],
-    'weights': ['uniform', 'distance'],
-    'metric': ['euclidean', 'manhattan', 'minkowski'],
-    'p': [1, 2]
-}""",
-            language="python"
-        )
-
-
-
+        
     st.divider()
 
     st.subheader(
