@@ -377,6 +377,7 @@ if page == "Project Overview":
     )
 
     st.subheader("Models")
+
     models_table = pd.DataFrame(
         {
             "Model": [
@@ -384,15 +385,15 @@ if page == "Project Overview":
                 "Logistic Regression",
                 "K-Nearest Neighbors"
             ],
-            "Tuning Method": [
+            "Role": [
+                "Tuned model",
+                "Tuned model",
+                "Tuned model"
+            ],
+            "Configuration": [
                 "GridSearchCV",
                 "GridSearchCV",
                 "GridSearchCV"
-            ],
-            "Selection Metric": [
-                "Accuracy",
-                "Macro F1-Score",
-                "Macro F1-Score"
             ]
         }
     )
@@ -935,7 +936,7 @@ elif page == "Model Evaluation":
                 "min_samples_split": 5
             }
         )
-        st.write("Selection metric: **Accuracy**")
+        st.write("GridSearch scoring: **Accuracy**")
         st.write("Best CV Accuracy: **88.31%**")
 
     with col2:
@@ -948,7 +949,7 @@ elif page == "Model Evaluation":
                 "solver": "newton-cg"
             }
         )
-        st.write("Selection metric: **Macro F1-Score**")
+        st.write("GridSearch scoring: **Macro F1-Score**")
         st.write("Best CV Macro F1: **81.71%**")
 
     with col3:
@@ -961,7 +962,7 @@ elif page == "Model Evaluation":
                 "weights": "distance"
             }
         )
-        st.write("Selection metric: **Macro F1-Score**")
+        st.write("GridSearch scoring: **Macro F1-Score**")
         st.write("Best CV Macro F1: **67.96%**")
 
 
@@ -1059,8 +1060,8 @@ elif page == "Model Evaluation":
     b4.metric("Macro F1-Score", "87.90%")
 
     st.success(
-        "🏆 Decision Tree achieved the best overall performance with the "
-        "highest Accuracy, Macro Precision and Macro F1-Score."
+        "🏆 Decision Tree achieved the best overall performance with "
+        "the highest Accuracy, Macro Precision and Macro F1-Score."
     )
 
     st.subheader("Confusion Matrix — Best Model")
@@ -1162,18 +1163,15 @@ elif page == "Model Evaluation":
 
     st.write(
         """
-        - **Decision Tree** achieved the strongest overall performance.
-        - It obtained the highest **Accuracy (91.48%)**, **Macro Precision (92.08%)**
-          and **Macro F1-Score (87.90%)**.
-        - Logistic Regression achieved a similar Macro Recall but lower overall
-          Accuracy, Precision and F1-Score.
-        - K-Nearest Neighbors produced the lowest overall performance among the
-          three evaluated models.
-        - The confusion matrix shows which obesity classes are correctly predicted
-          and which classes are confused with one another.
+        - **Decision Tree** achieved the best overall performance.
+        - Decision Tree achieved **91.48% Accuracy**, **92.08% Macro Precision**,
+          **86.24% Macro Recall** and **87.90% Macro F1-Score**.
+        - Logistic Regression achieved **89.20% Accuracy** and **84.09% Macro F1-Score**.
+        - K-Nearest Neighbors achieved **79.55% Accuracy** and **76.84% Macro F1-Score**.
+        - The confusion matrix shows the correctly predicted classes on the diagonal
+          and the incorrectly classified obesity levels outside the diagonal.
         """
     )
-
 
 
 
