@@ -67,24 +67,24 @@ NOTEBOOK_RESULTS = pd.DataFrame(
             "K-Nearest Neighbors"
         ],
         "Accuracy": [
-            91.4773,
-            89.2045,
-            79.5455
+            91.48,
+            89.20,
+            79.55
         ],
         "Macro Precision": [
-            92.0768,
-            83.0840,
-            82.3879
+            92.08,
+            83.08,
+            82.39
         ],
         "Macro Recall": [
-            86.2356,
-            85.5664,
-            74.2206
+            86.24,
+            85.57,
+            74.22
         ],
         "Macro F1-Score": [
-            87.8960,
-            84.0934,
-            76.8381
+            87.90,
+            84.09,
+            76.84
         ]
     }
 )
@@ -343,7 +343,7 @@ if page == "Project Overview":
         "Decision Tree, Logistic Regression and K-Nearest Neighbors."
     )
 
-    c1, c2, c3, c4, c5 = st.columns(5)
+    c1, c2, c3, c4 = st.columns(4)
 
     c1.metric(
         "Original Records",
@@ -356,16 +356,11 @@ if page == "Project Overview":
     )
 
     c3.metric(
-        "Original Features",
+        "Input Features",
         "16"
     )
 
     c4.metric(
-        "Encoded Features",
-        "23"
-    )
-
-    c5.metric(
         "Target Classes",
         "7"
     )
@@ -382,7 +377,6 @@ if page == "Project Overview":
     )
 
     st.subheader("Models")
-
     models_table = pd.DataFrame(
         {
             "Model": [
@@ -390,7 +384,7 @@ if page == "Project Overview":
                 "Logistic Regression",
                 "K-Nearest Neighbors"
             ],
-            "Tuning": [
+            "Tuning Method": [
                 "GridSearchCV",
                 "GridSearchCV",
                 "GridSearchCV"
@@ -941,7 +935,7 @@ elif page == "Model Evaluation":
                 "min_samples_split": 5
             }
         )
-        st.write("GridSearch scoring: **Accuracy**")
+        st.write("Selection metric: **Accuracy**")
         st.write("Best CV Accuracy: **88.31%**")
 
     with col2:
@@ -954,7 +948,7 @@ elif page == "Model Evaluation":
                 "solver": "newton-cg"
             }
         )
-        st.write("GridSearch scoring: **Macro F1-Score**")
+        st.write("Selection metric: **Macro F1-Score**")
         st.write("Best CV Macro F1: **81.71%**")
 
     with col3:
@@ -967,8 +961,9 @@ elif page == "Model Evaluation":
                 "weights": "distance"
             }
         )
-        st.write("GridSearch scoring: **Macro F1-Score**")
+        st.write("Selection metric: **Macro F1-Score**")
         st.write("Best CV Macro F1: **67.96%**")
+
 
     st.divider()
 
@@ -1064,8 +1059,8 @@ elif page == "Model Evaluation":
     b4.metric("Macro F1-Score", "87.90%")
 
     st.success(
-        "🏆 Decision Tree achieved the highest Accuracy, Macro Precision, "
-        "and Macro F1-Score among the three evaluated models."
+        "🏆 Decision Tree achieved the best overall performance with the "
+        "highest Accuracy, Macro Precision and Macro F1-Score."
     )
 
     st.subheader("Confusion Matrix — Best Model")
@@ -1126,7 +1121,7 @@ elif page == "Model Evaluation":
             )
 
             ax_cm.set_title(
-                "Confusion Matrix - Decision Tree"
+                f"Confusion Matrix - {type(model).__name__}"
             )
 
             fig_cm.tight_layout()
@@ -1167,16 +1162,18 @@ elif page == "Model Evaluation":
 
     st.write(
         """
-        - **Decision Tree** provides the strongest overall performance,
-          with 91.48% Accuracy and 87.90% Macro F1-Score.
-        - **Logistic Regression** is the second-best model overall and
-          achieves 89.20% Accuracy.
-        - **K-Nearest Neighbors** has the lowest overall performance of
-          the three evaluated models.
-        - The confusion matrix shows which obesity classes are predicted
-          correctly and which classes are confused with each other.
+        - **Decision Tree** achieved the strongest overall performance.
+        - It obtained the highest **Accuracy (91.48%)**, **Macro Precision (92.08%)**
+          and **Macro F1-Score (87.90%)**.
+        - Logistic Regression achieved a similar Macro Recall but lower overall
+          Accuracy, Precision and F1-Score.
+        - K-Nearest Neighbors produced the lowest overall performance among the
+          three evaluated models.
+        - The confusion matrix shows which obesity classes are correctly predicted
+          and which classes are confused with one another.
         """
     )
+
 
 
 
