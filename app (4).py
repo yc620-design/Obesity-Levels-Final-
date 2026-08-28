@@ -67,22 +67,22 @@ NOTEBOOK_RESULTS = pd.DataFrame(
             "K-Nearest Neighbors"
         ],
         "Accuracy": [
-            91.48,
+            89.77,
             81.25,
             78.98
         ],
         "Macro Precision": [
-            92.08,
+            91.18,
             74.32,
             75.66
         ],
         "Macro Recall": [
-            86.24,
+            83.95,
             72.27,
             70.79
         ],
         "Macro F1-Score": [
-            87.90,
+            86.19,
             72.72,
             72.32
         ]
@@ -924,16 +924,16 @@ elif page == "Model Evaluation":
         st.caption("Tuned Model — GridSearchCV")
         st.json(
             {
-                "class_weight": "balanced",
+                "class_weight": None,
                 "criterion": "entropy",
                 "max_depth": 10,
                 "min_samples_leaf": 1,
-                "min_samples_split": 5
+                "min_samples_split": 2
             }
         )
         st.write("GridSearch scoring: **Accuracy**")
-        st.write("Cross-validation: **5 folds**")
-        st.write("Best CV Accuracy: **88.31%**")
+        st.write("Cross-validation: **StratifiedKFold (5 folds)**")
+        st.write("Best CV Accuracy: **89.88%**")
 
     with col2:
         st.markdown("#### Logistic Regression")
@@ -1069,10 +1069,10 @@ elif page == "Model Evaluation":
 
     b1, b2, b3, b4 = st.columns(4)
 
-    b1.metric("Accuracy", "91.48%")
-    b2.metric("Macro Precision", "92.08%")
-    b3.metric("Macro Recall", "86.24%")
-    b4.metric("Macro F1-Score", "87.90%")
+    b1.metric("Accuracy", "89.77%")
+    b2.metric("Macro Precision", "91.18%")
+    b3.metric("Macro Recall", "83.95%")
+    b4.metric("Macro F1-Score", "86.19%")
 
     st.success(
         "🏆 Decision Tree achieved the best overall performance with "
@@ -1179,13 +1179,14 @@ elif page == "Model Evaluation":
     st.write(
         """
         - **Decision Tree** achieved the strongest overall performance with
-          **91.48% Accuracy** and **87.90% Macro F1-Score**.
+          **89.77% Accuracy**, **91.18% Macro Precision**,
+          **83.95% Macro Recall** and **86.19% Macro F1-Score**.
         - **Logistic Regression** is the baseline model and achieved
           **81.25% Accuracy** and **72.72% Macro F1-Score**.
         - **K-Nearest Neighbors** was tuned using GridSearchCV with
           StratifiedKFold and achieved **78.98% Accuracy** and
           **72.32% Macro F1-Score**.
-        - Based on Macro F1-Score, the overall ranking is:
+        - Based on Macro F1-Score, the ranking is:
           **Decision Tree > Logistic Regression > K-Nearest Neighbors**.
         - The confusion matrix below shows the performance of the selected
           best model, Decision Tree.
