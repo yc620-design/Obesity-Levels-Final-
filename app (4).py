@@ -1504,11 +1504,45 @@ feature_columns.pkl"""
             "Model Used",
             "Decision Tree"
         )
+    
+    # --------------------------------------------------------
+    # SELECTED MODEL PERFORMANCE
+    # --------------------------------------------------------
+
+    st.markdown("#### Selected Model Performance")
+
+    X_test_scaled, y_test = recreate_test_set(cleaned_df)
+
+    live_test_pred = model.predict(X_test_scaled)
+
+    live_accuracy = accuracy_score(
+        y_test,
+        live_test_pred
+    ) * 100
+
+    live_macro_f1 = f1_score(
+        y_test,
+        live_test_pred,
+        average="macro",
+        zero_division=0
+    ) * 100
+
+    performance_col1, performance_col2 = st.columns(2)
+
+    performance_col1.metric(
+        "Test Accuracy",
+        f"{live_accuracy:.2f}%"
+    )
+
+    performance_col2.metric(
+        "Macro F1-Score",
+        f"{live_macro_f1:.2f}%"
+    )
 
     st.caption(
-        "The prediction updates automatically whenever you change an input. "
-        "BMI is displayed only as reference information and is not used as "
-        "an additional prediction feature."
+        "These values represent the overall performance of the selected "
+        "Decision Tree model on the testing dataset, not the certainty "
+        "of an individual prediction."
     )
 
     # --------------------------------------------------------
