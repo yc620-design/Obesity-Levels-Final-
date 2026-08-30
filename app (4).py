@@ -1486,42 +1486,30 @@ feature_columns.pkl"""
     st.divider()
     st.subheader("Your Result")
 
-    result_left, result_right = st.columns(
-        [1.2, 1]
-    )
+    result_left, result_middle, result_right = st.columns(3)
 
     with result_left:
-
         st.success(
-            f"## Predicted Obesity Level: {friendly_label}"
+            f"### Predicted Obesity Level\n{friendly_label}"
         )
 
-        if confidence is not None:
-            st.metric(
-                "Model Confidence",
-                f"{confidence:.2f}%"
-            )
-
-            st.caption(
-                "Model Confidence shows how strongly the model prefers "
-                "this class compared with the other possible classes."
-            )
-
-        st.caption(
-            "The result updates automatically whenever you change an input."
-        )
-
-    with result_right:
-
+    with result_middle:
         st.metric(
             "BMI Reference",
             f"{bmi:.2f}"
         )
 
-        st.caption(
-            "BMI is displayed only as a reference. "
-            "The model uses all entered features, not BMI alone."
+    with result_right:
+        st.metric(
+            "Model Used",
+            "Decision Tree"
         )
+
+    st.caption(
+        "The prediction updates automatically whenever you change an input. "
+        "BMI is displayed only as reference information and is not used as "
+        "an additional prediction feature."
+    )
 
     # --------------------------------------------------------
     # TOP 3 PREDICTIONS
