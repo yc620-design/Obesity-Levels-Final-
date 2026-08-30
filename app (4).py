@@ -429,8 +429,6 @@ elif page == "Data Analysis":
 
     # --------------------------------------------------------
     # GRAPH 1 — DISTRIBUTION OF OBESITY LEVELS
-    # Notebook:
-    # sns.countplot(data=obe, x="NObeyesdad")
     # --------------------------------------------------------
 
     st.subheader("1. Distribution of Obesity Levels")
@@ -479,7 +477,6 @@ elif page == "Data Analysis":
 
     # --------------------------------------------------------
     # GRAPH 2 — NUMBER OF PEOPLE IN EACH OBESITY LEVEL
-    # Follows the notebook coding part
     # --------------------------------------------------------
 
     st.subheader(
@@ -540,9 +537,6 @@ elif page == "Data Analysis":
 
     # --------------------------------------------------------
     # GRAPH 3 — FAF VS TUE
-    # Notebook:
-    # group by NObeyesdad, calculate mean FAF/TUE,
-    # melt the dataframe, then use sns.pointplot()
     # --------------------------------------------------------
 
     st.subheader(
@@ -637,9 +631,6 @@ elif page == "Data Analysis":
 
     # --------------------------------------------------------
     # GRAPH 4 — CORRELATION HEATMAP
-    # Notebook:
-    # corr = obe.corr(numeric_only=True)
-    # sns.heatmap(... annot=True, fmt=".2f", cmap="rocket")
     # --------------------------------------------------------
 
     st.subheader(
