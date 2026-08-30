@@ -1442,43 +1442,6 @@ feature_columns.pkl"""
         " "
     )
 
-    # Probability / confidence
-    probability_df = None
-    confidence = None
-
-    if hasattr(model, "predict_proba"):
-
-        probabilities = model.predict_proba(
-            input_scaled
-        )[0]
-
-        model_classes = np.asarray(
-            model.classes_
-        ).astype(int)
-
-        class_labels = label_encoder.inverse_transform(
-            model_classes
-        )
-
-        probability_df = pd.DataFrame(
-            {
-                "Obesity Level": [
-                    label.replace("_", " ")
-                    for label in class_labels
-                ],
-                "Probability (%)": (
-                    probabilities * 100
-                ).round(2)
-            }
-        ).sort_values(
-            "Probability (%)",
-            ascending=False
-        ).reset_index(drop=True)
-
-        confidence = float(
-            probability_df.iloc[0]["Probability (%)"]
-        )
-
     # ========================================================
     # RESULT SECTION
     # ========================================================
@@ -1505,89 +1468,6 @@ feature_columns.pkl"""
             "Decision Tree"
         )
     
-    # --------------------------------------------------------
-    # SELECTED MODEL PERFORMANCE
-    # --------------------------------------------------------
-
-    st.markdown("#### Selected Model Performance")
-
-    X_test_scaled, y_test = recreate_test_set(cleaned_df)
-
-    live_test_pred = model.predict(X_test_scaled)
-
-    live_accuracy = accuracy_score(
-        y_test,
-        live_test_pred
-    ) * 100
-
-    live_macro_f1 = f1_score(
-        y_test,
-        live_test_pred,
-        average="macro",
-        zero_division=0
-    ) * 100
-
-    performance_col1, performance_col2 = st.columns(2)
-
-    performance_col1.metric(
-        "Test Accuracy",
-        f"{live_accuracy:.2f}%"
-    )
-
-    performance_col2.metric(
-        "Macro F1-Score",
-        f"{live_macro_f1:.2f}%"
-    )
-
-    st.caption(
-        "These values represent the overall performance of the selected "
-        "Decision Tree model on the testing dataset, not the certainty "
-        "of an individual prediction."
-    )
-
-    # --------------------------------------------------------
-    # TOP 3 PREDICTIONS
-    # --------------------------------------------------------
-
-    if probability_df is not None:
-
-        st.markdown("#### Top 3 Possible Classes")
-
-        top3 = probability_df.head(3)
-
-        st.dataframe(
-            top3,
-            use_container_width=True,
-            hide_index=True
-        )
-
-        top3_chart = px.bar(
-            top3.sort_values(
-                "Probability (%)",
-                ascending=True
-            ),
-            x="Probability (%)",
-            y="Obesity Level",
-            orientation="h",
-            text="Probability (%)",
-            title="Top 3 Prediction Probabilities"
-        )
-
-        top3_chart.update_traces(
-            texttemplate="%{text:.2f}%",
-            textposition="outside"
-        )
-
-        top3_chart.update_layout(
-            xaxis_range=[0, 100],
-            height=320
-        )
-
-        st.plotly_chart(
-            top3_chart,
-            use_container_width=True
-        )
-
     # ========================================================
     # OPTIONAL DETAILS
     # ========================================================
